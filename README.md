@@ -32,26 +32,26 @@ excel配置说明
 ```go
 	int      整型数据
 	float    浮点数据
-	string     文本字段
-	istring    自定义枚举类型
-	bstring    布尔值文本  是/否  导出时直接转为true/false
+	str     文本字段
+	istr    自定义枚举类型
+	bstr    布尔值文本  是/否  导出时直接转为true/false
 	vector2  二维坐标 0,0
 	vector3  三维坐标 0,0,0
 	reward   奖励配置
-	rewards  奖励组配置
 ```
-*数据除开几个几本类型，像reward/rewards 可以根据需求自行做解析。解析处理在function.py文件中
+*列表类型 list(type) type  为上述类型
+*数据除开几个几本类型，像reward 可以根据需求自行做解析。解析处理在function.py文件中
 
 配置导出扩展
 ---------------
 	
-*目前导出只实现了lua,erl导出，若要扩展处理json,xml可在代码做新增provider，在run.py添加实例
+*目前导出只实现了lua,erl导出，若要扩展处理json,xml可在代码做新增exportor，在Main.py添加实例
 ```go
 providers = {
-	"lua": LuaProvider(),
-	"erl": ErlangProvider(),
-	"json": JsonProvider(),
-	"xml": XmlProvider()
+	"lua": LuaExportor(),
+	"erl": ErlangExportor(),
+	"json": JsonExportor(),
+	"xml": XmlExportor()
 }
 ```
 
