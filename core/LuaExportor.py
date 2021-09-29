@@ -5,32 +5,22 @@ import xlrd
 import xlwt
 import string
 
+from Config import FRONT
+from Config import BACKEND
+from Config import IGNORE
+from Config import DATA_START_INDEX
+
+from core.IExportor import IExportor as IExportor
 from core import function as func
 
-class LuaProvider:
+class LuaExportor(IExportor):
 
-	reader    = None
-	outputDir = ''
-
-	def __init__(self):
-
-		self.outputDir = ''
-
-	
-	def do_init(self, reader, output):
-		self.reader    = reader
-		self.outputDir = output
-		
-		if(False == os.path.exists(self.outputDir) ):
-			os.makedirs(self.outputDir);
-		if(self.outputDir[-1:] != '/'):
-			self.outputDir += '/'
-		
-	def to_string(self):
+	def to_string(self,reader):
+		self.reader = reader
 		lua = self.reader.tableName+"DB={\n"
 		
 		min,max = (-1,-1)
-		for i in range(self.reader.dataStarIndex, self.reader.rows):
+		for i in range(DATA_START_INDEX, self.reader.rows):
 			lua +="\t[%d]={" %  int(self.reader.datas[i][0]) 
 			
 			if(self.reader.mergedNum>0):
@@ -57,11 +47,11 @@ class LuaProvider:
 		lua += "}"
 		return self.mark() + lua
 	
-	def get_filepath(self):
-		return "%s%sDB.lua" %( self.outputDir , self.reader.tableName );
+	def get_filepath(self, outputDir):
+		return "%s%sDB.lua" %( outputDir , self.reader.tableName );
 		
 	def is_need(self, i):
-		return (False ==( i in self.reader.fliter[self.reader.ignore] ) and False==(i in self.reader.fliter[self.reader.front] ) )
+		return (False ==( i in self.reader.fliter[IGNORE] ) and False==(i in self.reader.fliter[FRONT] ) )
 		
 	def mark(self):
 		

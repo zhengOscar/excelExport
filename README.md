@@ -1,10 +1,10 @@
 excel配置及导出(目前实现lua,erlang导出)
 ================
 
-*本地安装python 2.7.10版本
+*本地安装python 3.10.0rc2版本
 *安装excel处理插件
-*pip install xlrd
-*pip install xlwt
+*pip3 install xlrd
+*pip3 install xlwt
 
 *安装完python 配置环境变量到python 目录和python/scripts目录
 *tool目录下有32位/64位版本，根据系统安装一个版本
@@ -32,9 +32,9 @@ excel配置说明
 ```go
 	int      整型数据
 	float    浮点数据
-	text     文本字段
-	itext    自定义枚举类型
-	btext    布尔值文本  是/否  导出时直接转为true/false
+	string     文本字段
+	istring    自定义枚举类型
+	bstring    布尔值文本  是/否  导出时直接转为true/false
 	vector2  二维坐标 0,0
 	vector3  三维坐标 0,0,0
 	reward   奖励配置

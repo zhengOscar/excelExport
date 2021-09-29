@@ -11,6 +11,13 @@ import xlrd
 import xlwt
 import string
 
+from Config import FRONT
+from Config import BACKEND
+from Config import IGNORE
+from Config import FIELD_NAME_INDEX
+from Config import DATA_TYPE_INDEX
+from Config import DATA_START_INDEX
+
 class SheetReader:
 	fileName =None
 	tableName=None
@@ -18,17 +25,12 @@ class SheetReader:
 	datas=None
 	rows = 0
 	cols = 0
-	markIndex = 1
-	keyIndex = 2
-	typeIndex = 3
-	dataStarIndex= 4
+	
 	keys = []
 	typestr = []
 	
-	front  = 10;#黄色
-	backend= 13;#红色
-	ignore = 23;#灰色
-	
+	sheets = None
+
 	fliter = {}#23 过滤不读取,  10前端专用 13后端专用
 	
 	mergedIndex =0
@@ -38,26 +40,20 @@ class SheetReader:
 	def __init__(self):
 	
 		self.fileName =None
-		self.tableName=None
-		
-		self.datas=None
-		self.keys = []
-		self.typestr = []
-		
-		self.mergedIndex =0
-		self.mergedCells =[]#
-		
-		self.fliter[self.backend] = []
-		self.fliter[self.front]   = []
-		self.fliter[self.ignore]  = []
 	
-	def load_data(self,filePath, fileName, tableName):
-	
+	def load_data(self,filePath, fileName):
 		self.fileName = fileName
-		self.tableName = tableName
 
-		wb = xlrd.open_workbook(filePath, formatting_info=1)
-		sheet = wb.sheet_by_name(self.tableName)
+		wb = xlrd.open_workbook(filePath, formatting_info=True)
+		self.sheets = wb.sheets();
+		return len(self.sheets);
+		
+	def load_sheet_data(self,index):
+		self.reset();
+		
+		sheet = self.sheets[index]
+		self.tableName= sheet.name.split("(")[0]
+		
 		self.rows = sheet.nrows
 		self.cols = sheet.ncols
 		self.datas = [[0 for i in range(self.cols)] for i in range(self.rows) ]
@@ -75,16 +71,26 @@ class SheetReader:
 
 		color = 0
 		for i in range(0 , self.cols ):
-			if(type(self.datas[self.keyIndex][i]).__name__=='float'):
-				self.keys.append( '['+str(int( self.datas[self.keyIndex][i] ) )+']' )
+			if(type(self.datas[FIELD_NAME_INDEX][i]).__name__=='float'):
+				self.keys.append( '['+str(int( self.datas[FIELD_NAME_INDEX][i] ) )+']' )
 			else:
-				self.keys.append( self.datas[self.keyIndex][i] )
-			self.typestr.append( self.datas[self.typeIndex][i] )
-			color = wb.xf_list[  sheet.cell_xf_index(self.keyIndex,i)  ].background.pattern_colour_index
-			if(self.fliter.has_key(color)):
+				self.keys.append( self.datas[FIELD_NAME_INDEX][i] )
+			self.typestr.append( self.datas[DATA_TYPE_INDEX][i] )
+			color =0;# wb.xf_list[  sheet.cell_xf_index(FIELD_NAME_INDEX,i)  ].background.pattern_colour_index
+			if(color in self.fliter):
 				self.fliter[color].append(i)
+				
+	def reset(self):
+		self.tableName=None
+		
+		self.datas=None
+		self.keys = []
+		self.typestr = []
+		
+		self.mergedIndex =0
+		self.mergedCells =[]#
+		
+		self.fliter[BACKEND] = []
+		self.fliter[FRONT]   = []
+		self.fliter[IGNORE]  = []
 
-	def WriteFile(self, name , data):
-		f = open(name,'w' )
-		f.write(data.encode('utf-8'));
-		f.close();

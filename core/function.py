@@ -8,8 +8,8 @@ from data import commonDB
 def fliterData(t, k, v):
 	res = ''
 	if(t=='text'):
-		if( languageDB.data.has_key(k) ):
-			if(  languageDB.data[k].has_key(v) ):
+		if(k in  languageDB.data ):
+			if(v in  languageDB.data[k] ):
 				
 				res ="languageDB."+makeKey(k)+"["+ str( languageDB.data[k][v]  ) +"]"
 			else:
@@ -18,8 +18,8 @@ def fliterData(t, k, v):
 			res = "''"
 			
 	elif(t=='itext'):
-		if(commonDB.data.has_key(k)):
-			if( commonDB.data[k].has_key(v) ):
+		if(k in commonDB.data):
+			if(v in commonDB.data[k] ):
 				res = str( commonDB.data[k][v] )
 			else:
 				res = "''"
@@ -39,7 +39,7 @@ def fliterData(t, k, v):
 			res = '{'
 			for item in ds:
 				r = item.split(':')
-				if(commonDB.data['props'].has_key( r[0] ) ):
+				if(r[0] in commonDB.data['props'] ):
 					if(len(r)==2):
 						res += commonDB.data['props'][ r[0] ] +'=' + str( r[1] ) +','
 					elif(len(r)==3):
@@ -94,7 +94,7 @@ def fliterData(t, k, v):
 			eds = {}
 			for item in ds:
 				r = item.split(':')
-				if(False == eds.has_key( r[2] ) ):
+				if(r[2] not in eds ):
 					eds[  r[2]  ] = []
 				
 				eds[  r[2]  ].append( r[0] )
@@ -203,7 +203,7 @@ def fliterDataForErl(t, k, v):
 			res = '['
 			for item in ds:
 				r = item.split(':')
-				if(commonDB.data['props_flag'].has_key( r[0] ) ):
+				if(r[0] in commonDB.data['props_flag'] ):
 					if(len(r)==2):
 						res += "("+commonDB.data['props_flag'][ r[0] ] +',' + str( r[1] ) +'),'
 					elif(len(r)==3):
@@ -211,8 +211,8 @@ def fliterDataForErl(t, k, v):
 			res = res[:-1]
 			res += ']'
 	elif(t=='itext'):
-		if(commonDB.data.has_key(k)):
-			if( commonDB.data[k].has_key(v) ):
+		if(k in commonDB.data):
+			if(v in commonDB.data[k] ):
 				res = str( commonDB.data[k][v] )
 			else:
 				res = '""'
