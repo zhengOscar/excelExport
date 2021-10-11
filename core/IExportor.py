@@ -6,7 +6,9 @@ from Config import FRONT
 from Config import BACKEND
 from Config import IGNORE
 from Config import DATA_START_INDEX
-from core import function as func
+
+from data import languageDB
+from data import commonDB
 
 class IExportor(metaclass=ABCMeta):
 
@@ -15,6 +17,11 @@ class IExportor(metaclass=ABCMeta):
 
 	@abstractmethod
 	def to_string(self,reader):
+		pass
+
+
+	@abstractmethod
+	def fliter_data(self,type,key, value):
 		pass
 
 

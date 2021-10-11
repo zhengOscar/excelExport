@@ -33,11 +33,11 @@ excel配置说明
 	int      整型数据
 	float    浮点数据
 	str     文本字段
-	istr    自定义枚举类型
-	bstr    布尔值文本  是/否  导出时直接转为true/false
 	vector2  二维坐标 0,0
 	vector3  三维坐标 0,0,0
 	reward   奖励配置
+	color    颜色
+	interval  区间数据0,100
 ```
 *列表类型 list(type) type  为上述类型
 *数据除开几个几本类型，像reward 可以根据需求自行做解析。解析处理在function.py文件中

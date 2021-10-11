@@ -14,7 +14,8 @@ from Config import MARK_INDEX
 from Config import DATA_START_INDEX
 
 from core.IExportor import IExportor as IExportor
-from core import function as func
+from data import languageDB
+from data import commonDB
 
 
 class ErlangExportor(IExportor):
@@ -34,8 +35,10 @@ class ErlangExportor(IExportor):
 			
 			for j in range(0, self.reader.cols):
 				if( self.is_need(j) ):
-					v = func.fliterDataForErl( self.reader.typestr[j], self.reader.keys[j], self.reader.datas[i][j])
-
+					v = self.fliter_data( self.reader.typestr[j], self.reader.keys[j], self.reader.datas[i][j])
+					if( v=="Error"):
+						raise TypeError("row:%s column:%s 数据格式不正确"%(i,j)) 
+					
 					if(j==min ):
 						if(self.reader.datas[0][min]=='props'):
 							q = True
@@ -68,6 +71,35 @@ class ErlangExportor(IExportor):
 			res = res[:-2]
 			res +="}.\n"
 		return self.mark() + res
+		
+	def fliter_data(self,type,key, value):
+		res = ''
+		
+		if(type=='int'):
+			res = str(int(value))
+		elif(type=='float'):
+			res = str(value)
+		elif(type=='str'):
+			res = '"'+ value +'"'
+		elif(type=='reward'):
+			res = '"'+ value +'"'
+		elif(type=='list(int)'):
+			res = '"'+ value +'"'
+		elif(type=='list(float)'):
+			res = '"'+ value +'"'
+		elif(type=='list(str)'):
+			res = '"'+ value +'"'
+		elif(type=='list(reward)'):
+			res = '"'+ value +'"'
+		elif(type=='interval(int)'):
+			if("," in str(value)):
+				r = value.split(',')
+				res = '('+r[0]+', '+r[1] +' )'
+			else:
+				res = "Error"
+		else:
+			res = '"'+ value +'"'
+		return res
 	
 	def get_filepath(self,outputDir):
 		return "%s%s_temp.config" %( outputDir , self.reader.tableName );

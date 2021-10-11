@@ -127,19 +127,22 @@ def export(filePath):
 			
 			if(config['lang'][index] in exportors ):
 				exportor = exportors[ config['lang'][index] ]
-				for k in range(0, sheetCount):
-					reader.load_sheet_data(k)
-					reader.tableName = "%s_%s"% (tableName,reader.tableName)
-					#one sheet one file
-					if(EXPORT_MODE == 1):
-						data = exportor.to_string(reader)
-						
+				try:
+					for k in range(0, sheetCount):
+						reader.load_sheet_data(k)
+						reader.tableName = "%s_%s"% (tableName,reader.tableName)
+						#one sheet one file
+						if(EXPORT_MODE == 1):
+							data = exportor.to_string(reader)
+							
+							writeFile(exportor.get_filepath(outputPath) , data)
+						else:
+							data += "\n\r"+exportor.to_string(reader)
+					if(EXPORT_MODE == 2):
+						reader.tableName = tableName
 						writeFile(exportor.get_filepath(outputPath) , data)
-					else:
-						data += "\n\r"+exportor.to_string(reader)
-				if(EXPORT_MODE == 2):
-					reader.tableName = tableName
-					writeFile(exportor.get_filepath(outputPath) , data)
+				except Exception as e:
+					print(e)
 			else:
 				print( 'no found exportor :'+  config['lang'][index])
 

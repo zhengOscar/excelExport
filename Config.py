@@ -17,7 +17,7 @@ ERL_File_FOLDER = "erl"
 #导出模式  1：一sheet 一个文件, 2：一个excel一个文件
 EXPORT_MODE = 1
 
-LIST_SPLIT_SYMBOL = ";"
+LIST_SPLIT_SYMBOL = ","
 
 #*************表格字段的过滤颜色定义*********
 
